@@ -7,18 +7,22 @@ app = Flask(__name__)
 # Configure Cloud SQL connection
 def connect_to_database():
     try:
-        conn = mysql.connector.connect(
-            host='watchful-pier-422221-q7:us-central1:latam-instance',
-            user='dbadmin',
-            password='dbadmin1234$',
-            database='latam-database'
-        )
-        if conn.is_connected():
-            print('Connected to MySQL database')
-            return conn
-    except Error as e:
-        print(e)
+        unix_socket = '/cloudsql/{}'.format(app.config['CLOUD_SQL_CONNECTION_NAME'])
+        conn = mysql.connector.connect(user=app.config['DB_USER'],
+                                       password=app.config['DB_PASSWORD'],
+                                       unix_socket=unix_socket,
+                                       database=app.config['DB_NAME'])
+        return conn
+    except mysql.connector.Error as e:
+        print(f"Error connecting to MySQL: {e}")
         return None
+    
+# Load configuration from environment variables
+app.config['CLOUD_SQL_CONNECTION_NAME'] = os.environ.get('CLOUD_SQL_CONNECTION_NAME')
+app.config['DB_USER'] = os.environ.get('DB_USER')
+app.config['DB_PASSWORD'] = os.environ.get('DB_PASSWORD')
+app.config['DB_NAME'] = os.environ.get('DB_NAME')
+
 
 # Create a cursor object
 def get_cursor(conn):
