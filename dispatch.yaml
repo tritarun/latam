@@ -1,0 +1,6 @@
+dispatch:
+  - url: "*/be/*"
+    service: nodejs-proxy
+
+  - url: "*/.*"
+    service: default
