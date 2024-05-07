@@ -6,7 +6,7 @@ on:
 
 jobs:
   build-and-deploy:
-    runs-on: google/cloud-sdk:latest
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
 
@@ -29,6 +29,8 @@ jobs:
     # Deploy the application to App Engine
     - name: Deploy to App Engine
       run: |
+        sudo apt-get update
+        sudo apt-get install google-cloud-sdk -y
         cd ./src
         echo ${{ secrets.GCP_CREDENTIALS }} > ./credentials.json
         gcloud auth activate-service-account --key-file=./credentials.json
