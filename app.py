@@ -54,7 +54,7 @@ def create_data():
             conn.close()
 
 # Read operation
-@app.route('/api/data', methods=['GET'])
+@app.route('/', methods=['GET'])
 def get_all_data():
     conn = connect_to_database()
     cursor = get_cursor(conn)
