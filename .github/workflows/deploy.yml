@@ -1,0 +1,36 @@
+name: Deploy to App Engine
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    # # Set up Google Cloud authentication
+    # - name: Set up Google Cloud authentication
+    #   uses: google-github-actions/setup-gcloud@v0.3.1
+    #   with:
+    #     service_account_key: ${{ secrets.GCP_CREDENTIALS }}
+
+    # # Install dependencies (if applicable)
+    # - name: Install dependencies (Python example)
+    #   run: |
+    #      python -m venv venv
+    #      source venv/bin/activate
+    #      pip install -r requirements.txt
+
+    # Build the application (if applicable)
+    # ... (steps specific to your framework)
+
+    # Deploy the application to App Engine
+    - name: Deploy to App Engine
+      run: |
+        cd ./src
+        gcloud app deploy
+      env:
+        GOOGLE_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
+
