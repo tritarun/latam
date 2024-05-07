@@ -27,16 +27,24 @@ jobs:
     # ... (steps specific to your framework)
 
     # Deploy the application to App Engine
-    - name: Deploy to App Engine
-      run: |
-        sudo apt-get install apt-transport-https ca-certificates gnupg curl
-        curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg
-        echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
-        sudo apt-get update && sudo apt-get install google-cloud-cli -y
-        cd ./src
-        echo "${{ secrets.GCP_CREDENTIALS }}" > ./credentials.json
-        gcloud auth activate-service-account --key-file=./credentials.json
-        gcloud app deploy
-      env:
-        GOOGLE_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
+    # - name: Deploy to App Engine
+    #   run: |
+    #     sudo apt-get install apt-transport-https ca-certificates gnupg curl
+    #     curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg
+    #     echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+    #     sudo apt-get update && sudo apt-get install google-cloud-cli -y
+    #     cd ./src
+    #     echo "${{ secrets.GCP_CREDENTIALS }}" > ./credentials.json
+    #     gcloud auth activate-service-account --key-file=./credentials.json
+    #     gcloud app deploy
+    #   env:
+    #     GOOGLE_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
 
+    - name: Deploy to App Engine
+      id: deploy
+      uses: google-github-actions/deploy-appengine@v0.2.0
+      with:
+        deliverables: app.yml
+        version: v1
+        project_id: ${{ secrets.GCP_PROJECT }}
+        credentials: ${{ secrets.GCP_CREDENTIALS }}
