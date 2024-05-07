@@ -30,6 +30,8 @@ jobs:
     - name: Deploy to App Engine
       run: |
         cd ./src
+        echo ${{ secrets.GCP_CREDENTIALS }} > ./credentials.json
+        gcloud auth activate-service-account --key-file=./credentials.json
         gcloud app deploy
       env:
         GOOGLE_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
