@@ -4,11 +4,11 @@ instance_class: F1
 service: post-request
 
 env_variables:
-  CLOUD_SQL_CONNECTION_NAME: 'watchful-pier-422221-q7:us-central1:latam-instance'
-  DB_USER: 'dbadmin'
-  DB_PASSWORD: 'dbadmin1234$'
-  DB_NAME: 'latam-database'
+  CLOUD_SQL_CONNECTION_NAME: watchful-pier-422221-q7:us-central1:latam-instance
+  DB_USER: root
+  DB_PASSWORD: latam1234$
+  DB_NAME: latam-database
 
 beta_settings:
-  cloud_sql_instances: 'latam-instance'
+  cloud_sql_instances: latam-instance
 
