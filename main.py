@@ -47,12 +47,16 @@ def create_data():
         return jsonify({'error': 'No data provided'}), 400
     
     try:
-        query = "INSERT INTO tema (column1, column2) VALUES (%s, %s)"
-        values = (data.get('value1'), data.get('value2'))
-        cursor.execute(query, values)
+        tema_nombre = data.get('nombre')
+        if not tema_nombre:
+            return jsonify({'error': 'Missing field "nombre"'}), 400
+        
+        query = "INSERT INTO tema (nombre) VALUES (%s)"
+        cursor.execute(query, (tema_nombre,))
         conn.commit()
-        return jsonify({'message': 'Data created successfully'}), 201
+        return jsonify({'message': 'Tema created successfully'}), 201
     except Error as e:
+        conn.rollback()
         print(e)
         return jsonify({'error': 'Failed to create data'}), 500
     finally:
