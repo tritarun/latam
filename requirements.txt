@@ -1,5 +1,4 @@
-Flask==3.0.0
-mysql-connector-python==8.0.28
-gunicorn==20.1.0
+Flask
+mysql-connector-python
+gunicorn
 google-cloud-logging
-google-cloud-sql
