@@ -35,26 +35,34 @@ def get_cursor(conn):
 # Define API endpoints for CRUD operations
 
 # Create operation
-@app.route('/api/data', methods=['POST'])
-def create_data():
+@app.route('/api/tema/', methods=['POST'])
+def create_tema_with_mensajes():
+    data = request.get_json()
     conn = connect_to_database()
     cursor = get_cursor(conn)
+
     if not cursor:
         return jsonify({'error': 'Unable to connect to database'}), 500
-    
-    data = request.get_json()
-    if not data:
-        return jsonify({'error': 'No data provided'}), 400
-    
+
     try:
-        query = "INSERT INTO demo_tbl (column1, column2) VALUES (%s, %s)"
-        values = (data.get('value1'), data.get('value2'))
-        cursor.execute(query, values)
+        # Insert the 'tema'
+        tema_query = "INSERT INTO tema (nombre) VALUES (%s)"
+        cursor.execute(tema_query, (data['nombre'],))
+        tema_id = cursor.lastrowid  # Get the ID of the newly inserted 'tema'
+
+        # Insert the 'mensajes'
+        mensajes_query = "INSERT INTO mensajes (tema_id, texto) VALUES (%s, %s)"
+        for mensaje in data['mensajes']:
+            cursor.execute(mensajes_query, (tema_id, mensaje['texto']))
+
         conn.commit()
-        return jsonify({'message': 'Data created successfully'}), 201
+        return jsonify({'message': 'Tema and mensajes created successfully'}), 201
+    
     except Error as e:
+        conn.rollback()
         print(e)
-        return jsonify({'error': 'Failed to create data'}), 500
+        return jsonify({'error': 'Failed to create tema and mensajes'}), 500
+
     finally:
         if conn:
             cursor.close()
