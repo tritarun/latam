@@ -47,7 +47,7 @@ def create_data():
         return jsonify({'error': 'No data provided'}), 400
     
     try:
-        query = "INSERT INTO your_table (column1, column2) VALUES (%s, %s)"
+        query = "INSERT INTO demo_tbl (column1, column2) VALUES (%s, %s)"
         values = (data.get('value1'), data.get('value2'))
         cursor.execute(query, values)
         conn.commit()
@@ -69,7 +69,7 @@ def get_all_data():
         return jsonify({'error': 'Unable to connect to database'}), 500
     
     try:
-        cursor.execute("SELECT * FROM your_table")
+        cursor.execute("SELECT * FROM demo_tbl")
         data = cursor.fetchall()
         return jsonify({'data': data}), 200
     except Error as e:
@@ -93,7 +93,7 @@ def update_data(data_id):
         return jsonify({'error': 'No data provided'}), 400
     
     try:
-        query = "UPDATE your_table SET column1 = %s, column2 = %s WHERE id = %s"
+        query = "UPDATE demo_tbl SET column1 = %s, column2 = %s WHERE id = %s"
         values = (data.get('value1'), data.get('value2'), data_id)
         cursor.execute(query, values)
         conn.commit()
@@ -115,7 +115,7 @@ def delete_data(data_id):
         return jsonify({'error': 'Unable to connect to database'}), 500
     
     try:
-        query = "DELETE FROM your_table WHERE id = %s"
+        query = "DELETE FROM demo_tbl WHERE id = %s"
         cursor.execute(query, (data_id,))
         conn.commit()
         return jsonify({'message': 'Data deleted successfully'}), 200
