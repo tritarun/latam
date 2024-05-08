@@ -34,71 +34,9 @@ def get_cursor(conn):
 
 # Define API endpoints for CRUD operations
 
-# Create operation for 'tema' and associated 'mensajes'
-@app.route('/api/tema/', methods=['POST'])
-def create_tema_with_mensajes():
-    data = request.get_json()
-    conn = connect_to_database()
-    cursor = get_cursor(conn)
-
-    if not cursor:
-        return jsonify({'error': 'Unable to connect to database'}), 500
-
-    try:
-        # Insert the 'tema'
-        tema_query = "INSERT INTO tema (nombre) VALUES (%s)"
-        cursor.execute(tema_query, (data['nombre'],))
-        tema_id = cursor.lastrowid  # Get the ID of the newly inserted 'tema'
-
-        # Insert the 'mensajes'
-        mensajes_query = "INSERT INTO mensajes (tema_id, texto) VALUES (%s, %s)"
-        for mensaje in data['mensajes']:
-            cursor.execute(mensajes_query, (tema_id, mensaje['texto']))
-
-        conn.commit()
-        return jsonify({'message': 'Tema and mensajes created successfully'}), 201
-    
-    except Error as e:
-        conn.rollback()
-        print(e)
-        return jsonify({'error': 'Failed to create tema and mensajes'}), 500
-
-    finally:
-        if conn:
-            cursor.close()
-            conn.close()
-
-# Read operation for 'tema' and associated 'mensajes'
-@app.route('/api/tema/', methods=['GET'])
-def get_all_temas():
-    conn = connect_to_database()
-    cursor = get_cursor(conn)
-    if not cursor:
-        return jsonify({'error': 'Unable to connect to database'}), 500
-    
-    try:
-        cursor.execute("SELECT * FROM tema")
-        temas = cursor.fetchall()
-        all_data = []
-        for tema in temas:
-            cursor.execute("SELECT * FROM mensajes WHERE tema_id = %s", (tema[0],))
-            mensajes = cursor.fetchall()
-            all_data.append({
-                'tema': tema[1],
-                'mensajes': [{'id': msg[0], 'texto': msg[2]} for msg in mensajes]
-            })
-        return jsonify(all_data), 200
-    except Error as e:
-        print(e)
-        return jsonify({'error': 'Failed to fetch data'}), 500
-    finally:
-        if conn:
-            cursor.close()
-            conn.close()
-
-# Update operation for 'mensajes' (example for updating a specific message)
-@app.route('/api/mensajes/<int:mensaje_id>', methods=['PUT'])
-def update_mensaje(mensaje_id):
+# Create operation
+@app.route('/api/data', methods=['POST'])
+def create_data():
     conn = connect_to_database()
     cursor = get_cursor(conn)
     if not cursor:
@@ -109,21 +47,68 @@ def update_mensaje(mensaje_id):
         return jsonify({'error': 'No data provided'}), 400
     
     try:
-        query = "UPDATE mensajes SET texto = %s WHERE id = %s"
-        cursor.execute(query, (data.get('texto'), mensaje_id))
+        query = "INSERT INTO tema (column1, column2) VALUES (%s, %s)"
+        values = (data.get('value1'), data.get('value2'))
+        cursor.execute(query, values)
         conn.commit()
-        return jsonify({'message': 'Mensaje updated successfully'}), 200
+        return jsonify({'message': 'Data created successfully'}), 201
     except Error as e:
         print(e)
-        return jsonify({'error': 'Failed to update mensaje'}), 500
+        return jsonify({'error': 'Failed to create data'}), 500
     finally:
         if conn:
             cursor.close()
             conn.close()
 
-# Delete operation for 'tema' and associated 'mensajes' (cascade delete)
-@app.route('/api/tema/<int:tema_id>', methods=['DELETE'])
-def delete_tema(tema_id):
+# Read operation
+@app.route('/', methods=['GET'])
+def get_all_data():
+    conn = connect_to_database()
+    cursor = get_cursor(conn)
+    if not cursor:
+        return jsonify({'error': 'Unable to connect to database'}), 500
+    
+    try:
+        cursor.execute("SELECT * FROM tema")
+        data = cursor.fetchall()
+        return jsonify({'data': data}), 200
+    except Error as e:
+        print(e)
+        return jsonify({'error': 'Failed to fetch data'}), 500
+    finally:
+        if conn:
+            cursor.close()
+            conn.close()
+
+# Update operation
+@app.route('/api/data/<int:data_id>', methods=['PUT'])
+def update_data(data_id):
+    conn = connect_to_database()
+    cursor = get_cursor(conn)
+    if not cursor:
+        return jsonify({'error': 'Unable to connect to database'}), 500
+    
+    data = request.get_json()
+    if not data:
+        return jsonify({'error': 'No data provided'}), 400
+    
+    try:
+        query = "UPDATE tema SET column1 = %s, column2 = %s WHERE id = %s"
+        values = (data.get('value1'), data.get('value2'), data_id)
+        cursor.execute(query, values)
+        conn.commit()
+        return jsonify({'message': 'Data updated successfully'}), 200
+    except Error as e:
+        print(e)
+        return jsonify({'error': 'Failed to update data'}), 500
+    finally:
+        if conn:
+            cursor.close()
+            conn.close()
+
+# Delete operation
+@app.route('/api/data/<int:data_id>', methods=['DELETE'])
+def delete_data(data_id):
     conn = connect_to_database()
     cursor = get_cursor(conn)
     if not cursor:
@@ -131,12 +116,12 @@ def delete_tema(tema_id):
     
     try:
         query = "DELETE FROM tema WHERE id = %s"
-        cursor.execute(query, (tema_id,))
+        cursor.execute(query, (data_id,))
         conn.commit()
-        return jsonify({'message': 'Tema and associated mensajes deleted successfully'}), 200
+        return jsonify({'message': 'Data deleted successfully'}), 200
     except Error as e:
         print(e)
-        return jsonify({'error': 'Failed to delete tema'}), 500
+        return jsonify({'error': 'Failed to delete data'}), 500
     finally:
         if conn:
             cursor.close()

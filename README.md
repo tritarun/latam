@@ -39,3 +39,8 @@ provider.tf
 Part 2: Applications and CI/CD flow
 HTTP API: Set up an HTTP endpoint with logic that reads data from the database and exposes it when receiving a GET request.
 
+Invocation Method:
+https://post-request-dot-watchful-pier-422221-q7.uc.r.appspot.com/
+
+CI-CD deployment method:
+ .github/workflows/deploy.yml
