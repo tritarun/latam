@@ -13,5 +13,5 @@ env_variables:
   DB_NAME: latam-database
 
 beta_settings:
-  cloud_sql_instances: latam-instance
+  cloud_sql_instances: watchful-pier-422221-q7:us-central1:latam-instance
 
