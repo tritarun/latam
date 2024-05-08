@@ -19,17 +19,17 @@ Python.
 Part 1: Infrastructure and IaC
 Identify the infrastructure necessary to ingest, store and expose data: Use the Pub/Sub scheme: Pubsub scheme is used, for this 3 enpoints are exposed.
 
-POST: https://watchful-pier-422221-q7.uc.r.appspot.com/ (Create a theme)
-PUT: https://watchful-pier-422221-q7.uc.r.appspot.com/ (Update a theme)
-GET: https://watchful-pier-422221-q7.uc.r.appspot.com/{id} (Get messages from a topic)
+POST: https://post-request-dot-watchful-pier-422221-q7.uc.r.appspot.com/ (Create a theme)
+PUT: https://post-request-dot-watchful-pier-422221-q7.uc.r.appspot.com/ (Update a theme)
+GET: https://post-request-dot-watchful-pier-422221-q7.uc.r.appspot.com/{id} (Get messages from a topic)
 
 b. Database for storage focused on data analytics.
 A Database is used in GCP under the Sql Cloud service, name **database_latam**, Mysql 8 engine.
 c. HTTP endpoint to serve part of the stored data.
 
-POST: https://watchful-pier-422221-q7.uc.r.appspot.com/ (Create a theme)
-PUT: https://watchful-pier-422221-q7.uc.r.appspot.com/ (Update a theme)
-GET: https://watchful-pier-422221-q7.uc.r.appspot.com/{id} (Get messages from a topic)
+POST: https://post-request-dot-watchful-pier-422221-q7.uc.r.appspot.com/ (Create a theme)
+PUT: https://post-request-dot-watchful-pier-422221-q7.uc.r.appspot.com/ (Update a theme)
+GET: https://post-request-dot-watchful-pier-422221-q7.uc.r.appspot.com/{id} (Get messages from a topic)
 Deploy infrastructure using Terraform in the way that best suits you. Include Terraform source code.
 Terraform is used to deploy the database, the only infrastructure component that we would be using.
 
