@@ -64,18 +64,22 @@ def create_data():
             cursor.close()
             conn.close()
 
-# Read operation
-@app.route('/', methods=['GET'])
-def get_all_data():
+# Read operation for specific ID
+@app.route('/api/data/<int:data_id>', methods=['GET'])
+def get_data_by_id(data_id):
     conn = connect_to_database()
     cursor = get_cursor(conn)
     if not cursor:
         return jsonify({'error': 'Unable to connect to database'}), 500
     
     try:
-        cursor.execute("SELECT * FROM tema")
-        data = cursor.fetchall()
-        return jsonify({'data': data}), 200
+        query = "SELECT * FROM tema WHERE id = %s"
+        cursor.execute(query, (data_id,))
+        data = cursor.fetchone()  # Fetches only one record
+        if data:
+            return jsonify({'data': data}), 200
+        else:
+            return jsonify({'message': 'No data found with provided ID'}), 404
     except Error as e:
         print(e)
         return jsonify({'error': 'Failed to fetch data'}), 500
@@ -83,7 +87,7 @@ def get_all_data():
         if conn:
             cursor.close()
             conn.close()
-
+            
 # Update operation
 @app.route('/api/data/<int:data_id>', methods=['PUT'])
 def update_data(data_id):
